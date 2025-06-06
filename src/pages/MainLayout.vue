@@ -1,6 +1,5 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <!-- NAVBAR GLOBAL -->
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
@@ -22,7 +21,6 @@
       </q-toolbar>
     </q-header>
 
-    <!-- PAGINILE SE ÎNCARCĂ AICI -->
     <q-page-container>
       <router-view />
     </q-page-container>

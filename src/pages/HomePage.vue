@@ -1,14 +1,14 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <!-- NAVBAR GLOBAL -->
-    <q-header elevated class="bg-primary text-white">
+  <q-page class="q-pa-md">
+    <!-- NAVBAR LOCAL -->
+    <q-header elevated class="bg-primary text-white q-mb-md">
       <q-toolbar>
         <q-toolbar-title>
           <q-icon name="shopping_cart" class="q-mr-sm" />
           E-Commerce App
         </q-toolbar-title>
 
-        <q-btn flat dense label="Acasă" to="/home" />
+        <q-btn flat dense label="Acasă" to="/" />
         <q-btn flat dense label="Produse" to="/products" />
         <q-btn flat dense label="Despre" to="/about" />
 
@@ -22,11 +22,12 @@
       </q-toolbar>
     </q-header>
 
-    <!-- PAGINILE SE ÎNCARCĂ AICI -->
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+    <!-- CONȚINUT PAGINĂ -->
+    <div class="text-h4 q-mt-md">Bine ai venit!</div>
+    <p class="text-subtitle1 q-mt-sm">
+      Descoperă cele mai bune produse în magazinul nostru online.
+    </p>
+  </q-page>
 </template>
 
 <script setup lang="ts">
