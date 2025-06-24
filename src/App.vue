@@ -1,9 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <!-- BACKGROUND -->
     <div class="animated-background"></div>
 
-    <!-- NAVBAR -->
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>

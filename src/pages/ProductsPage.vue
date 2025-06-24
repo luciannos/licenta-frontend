@@ -1,63 +1,67 @@
 <template>
   <q-page class="q-pa-md">
-    <div class="text-h5 q-mb-md">Catalog produse</div>
-
     <div class="row q-col-gutter-md q-mb-md">
-      <q-input class="col-6" v-model="filtru" label="Caută produs" dense outlined debounce="300" />
-      <q-select
-        class="col-6"
-        v-model="sortare"
-        :options="[
-          { label: 'Preț crescător', value: 'asc' },
-          { label: 'Preț descrescător', value: 'desc' },
-        ]"
-        label="Sortare"
-        dense
-        outlined
-      />
+      <div class="col-12 col-md-6">
+        <q-input v-model="filtru" label="Caută produs" outlined dense debounce="300" />
+      </div>
+      <div class="col-12 col-md-6">
+        <q-select
+          v-model="sortare"
+          label="Sortare după preț"
+          :options="['asc', 'desc']"
+          outlined
+          dense
+        />
+      </div>
     </div>
 
-    <q-card flat bordered class="q-pa-sm">
-      <q-card-section class="q-gutter-md row q-col-gutter-md">
-        <q-card
-          v-for="produs in produseFiltrate"
-          :key="produs.id"
-          class="my-card col-xs-12 col-sm-6 col-md-4 col-lg-3"
-          bordered
-        >
-          <q-img :src="produs.imagine" :alt="produs.nume" ratio="4/3" />
+    <div class="row q-col-gutter-md">
+      <div v-for="produs in produseFiltrate" :key="produs.id" class="col-12 col-sm-6 col-md-4">
+        <router-link :to="`/product/${produs.id}`" class="text-dark" style="text-decoration: none">
+          <q-card bordered class="q-hoverable">
+            <q-img
+              class="mb-4"
+              :src="produs.imagine"
+              alt="Imagine produs"
+              fit="scale-down"
+              aspect-ratio="16/9"
+              spinner-color="primary"
+              style="width: 100%; max-height: 200px; object-fit: cover; display: block"
+            >
+              <template v-slot:error>
+                <div class="absolute-full flex flex-center bg-negative text-white">
+                  Nu s-a putut încărca imaginea
+                </div>
+              </template>
+            </q-img>
 
-          <q-card-section>
-            <div class="text-subtitle1">{{ produs.nume }}</div>
-            <div class="text-grey text-caption q-mt-xs">{{ produs.descriere.slice(0, 70) }}...</div>
-          </q-card-section>
+            <q-card-section>
+              <div class="text-h6">{{ produs.denumire }}</div>
+              <div class="text-subtitle2">{{ produs.pret }} RON</div>
+            </q-card-section>
+          </q-card>
+        </router-link>
 
-          <q-card-section class="row items-center justify-between">
-            <div class="text-h6">{{ produs.pret }} RON</div>
-            <q-btn color="primary" label="Adaugă în coș" @click="adaugaInCos(produs)" />
-          </q-card-section>
-        </q-card>
-      </q-card-section>
-    </q-card>
+        <q-btn
+          label="Adaugă în coș"
+          icon="add_shopping_cart"
+          color="primary"
+          class="q-mt-sm"
+          @click="adaugaInCos(produs)"
+        />
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
+import type { Produs } from 'src/stores/useProductStore';
 import { useProductStore } from 'src/stores/useProductStore';
 
 const store = useProductStore();
 
 const produseFiltrate = computed(() => store.produseFiltrate);
-interface Produs {
-  id: number;
-  nume: string;
-  descriere: string;
-  imagine: string;
-  pret: number;
-}
-
-const adaugaInCos = (produs: Produs) => store.adaugaInCos(produs);
 
 const filtru = computed({
   get: () => store.filtru,
@@ -69,13 +73,25 @@ const sortare = computed({
   set: (val) => (store.sortare = val),
 });
 
+const adaugaInCos = (produs: Produs) => {
+  store.adaugaInCos(produs);
+};
+
 onMounted(() => {
-  store.incarcareProduse();
+  void store.incarcareProduse();
 });
 </script>
 
 <style scoped>
-.my-card {
-  max-width: 100%;
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.q-card {
+  transition: box-shadow 0.2s ease;
+}
+.q-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 </style>

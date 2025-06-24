@@ -1,34 +1,31 @@
-// views/RegisterView.vue
 <template>
   <q-page class="auth-page">
     <div class="auth-form">
-      <h2>Register</h2>
-      <q-input v-model="firstName" label="First Name" type="text" filled />
-      <q-input v-model="lastName" label="Last Name" type="text" filled class="q-mt-md" />
+      <h4>Inregistrare</h4>
+      <q-input v-model="nume" label="Nume" type="text" filled />
+      <q-input v-model="prenume" label="Prenume" type="text" filled class="q-mt-md" />
 
       <div class="q-mt-md">
-        <label class="q-mb-sm">Gender</label>
-        <q-option-group v-model="gender" :options="genderOptions" type="radio" inline />
+        <label class="q-mb-sm">Gen</label>
+        <q-option-group v-model="gen" :options="genderOptions" type="radio" inline />
       </div>
 
-      <q-input
-        v-if="gender === 'Other'"
-        v-model="otherGender"
-        label="Please specify"
-        type="text"
-        filled
-        class="q-mt-md"
-      />
-
       <q-input v-model="email" label="Email" type="email" filled class="q-mt-md" />
+      
       <q-input
-        v-model="password"
+        v-model="parola"
         filled
         :type="isPwd ? 'password' : 'text'"
-        label="Password"
-        hint="Minimum 8 characters, 1 uppercase, 1 number, 1 special character"
-        :rules="[(val) => (isPasswordValid ? true : 'Password does not meet criteria')]"
+        label="Parolă"
         class="q-mt-md"
+        :rules="[
+          val => !!val || 'Parola este obligatorie',
+          val => val.length >= 8 || 'Parola trebuie să aibă minim 8 caractere',
+          val => /[A-Z]/.test(val) || 'Parola trebuie să conțină cel puțin o literă mare',
+          val => /[a-z]/.test(val) || 'Parola trebuie să conțină cel puțin o literă mică',
+          val => /[0-9]/.test(val) || 'Parola trebuie să conțină cel puțin un număr',
+          val => /[!@#$%^&*]/.test(val) || 'Parola trebuie să conțină cel puțin un caracter special (!@#$%^&*)'
+        ]"
       >
         <template v-slot:append>
           <q-icon
@@ -37,105 +34,115 @@
             @click="isPwd = !isPwd"
           />
         </template>
+        <template v-slot:hint>
+          Parola trebuie să conțină minim 8 caractere, o literă mare, o literă mică, un număr și un caracter special
+        </template>
       </q-input>
 
       <q-input
-        v-model="confirmPassword"
+        v-model="confirmaParola"
         filled
-        :type="isConfirmPwd ? 'password' : 'text'"
-        label="Confirm Password"
-        :error="confirmTouched && !doPasswordsMatch"
-        error-message="Passwords do not match"
+        :type="isPwdConfirm ? 'password' : 'text'"
+        label="Confirmă Parola"
         class="q-mt-md"
-        @blur="confirmTouched = true"
+        :rules="[
+          val => !!val || 'Confirmarea parolei este obligatorie',
+          val => val === parola || 'Parolele nu coincid'
+        ]"
       >
         <template v-slot:append>
           <q-icon
-            :name="isConfirmPwd ? 'visibility_off' : 'visibility'"
+            :name="isPwdConfirm ? 'visibility_off' : 'visibility'"
             class="cursor-pointer"
-            @click="isConfirmPwd = !isConfirmPwd"
+            @click="isPwdConfirm = !isPwdConfirm"
           />
         </template>
       </q-input>
 
-      <q-input v-model="phone" label="Phone Number" type="tel" filled class="q-mt-md" />
-      <q-input v-model="address" label="Address" type="text" filled class="q-mt-md" />
+      <q-input v-model="telefon" label="Număr de telefon" type="tel" filled class="q-mt-md" />
+      <q-input v-model="adresa" label="Adresă" type="text" filled class="q-mt-md" />
 
       <q-btn
-        label="Register"
+        label="Înregistrează-te"
         color="secondary"
         class="q-mt-lg full-width"
         @click="handleRegister"
+        :disable="!isFormValid"
       />
+      <div class="text-center q-mt-md">
+        <q-btn flat color="primary" label="Ai deja un cont? Autentifică-te" to="/login" />
+      </div>
     </div>
   </q-page>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from 'stores/useAuthStore';
 
-export default defineComponent({
-  name: 'RegisterView',
-  setup() {
-    const firstName = ref('');
-    const lastName = ref('');
-    const gender = ref('');
-    const otherGender = ref('');
-    const email = ref('');
-    const password = ref('');
-    const confirmPassword = ref('');
-    const phone = ref('');
-    const address = ref('');
-    const isPwd = ref(true);
-    const isConfirmPwd = ref(true);
-    const confirmTouched = ref(false);
+const router = useRouter();
+const authStore = useAuthStore();
 
-    const genderOptions = [
-      { label: 'Male', value: 'Male' },
-      { label: 'Female', value: 'Female' },
-      { label: 'Other', value: 'Other' },
-    ];
+const nume = ref('');
+const prenume = ref('');
+const gen = ref('Bărbat');
+const email = ref('');
+const parola = ref('');
+const confirmaParola = ref('');
+const telefon = ref('');
+const adresa = ref('');
+const isPwd = ref(true);
+const isPwdConfirm = ref(true);
 
-    const isPasswordValid = computed(() => {
-      return /^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/.test(password.value);
-    });
+const genderOptions = [
+  { label: 'Bărbat', value: 'Bărbat' },
+  { label: 'Femeie', value: 'Femeie' },
+];
 
-    const doPasswordsMatch = computed(() => password.value === confirmPassword.value);
-
-    const handleRegister = () => {
-      confirmTouched.value = true;
-      if (!isPasswordValid.value) {
-        alert('Password does not meet criteria.');
-        return;
-      }
-      if (!doPasswordsMatch.value) {
-        alert('Passwords do not match.');
-        return;
-      }
-      const genderValue = gender.value === 'Other' ? otherGender.value : gender.value;
-      alert(`Registering ${firstName.value} ${lastName.value} (${genderValue})`);
-    };
-
-    return {
-      firstName,
-      lastName,
-      gender,
-      otherGender,
-      email,
-      password,
-      confirmPassword,
-      phone,
-      address,
-      genderOptions,
-      handleRegister,
-      isPwd,
-      isConfirmPwd,
-      confirmTouched,
-      isPasswordValid,
-      doPasswordsMatch,
-    };
-  },
+const isFormValid = computed(() => {
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+  return nume.value &&
+         prenume.value &&
+         gen.value &&
+         email.value &&
+         parola.value &&
+         confirmaParola.value &&
+         parola.value === confirmaParola.value &&
+         passwordRegex.test(parola.value) &&
+         telefon.value &&
+         adresa.value;
 });
+
+const handleRegister = async () => {
+  if (!isFormValid.value) {
+    alert('Te rugăm să completezi toate câmpurile și să te asiguri că parola respectă toate cerințele.');
+    return;
+  }
+
+  try {
+    await authStore.register({
+      nume: nume.value,
+      prenume: prenume.value,
+      gen: gen.value,
+      email: email.value,
+      parola: parola.value,
+      telefon: telefon.value,
+      adresa: adresa.value,
+    });
+    alert('Înregistrare reușită! Vă rugăm să vă autentificați.');
+    await router.push('/login');
+  } catch (error: unknown) {
+    let errorMessage = 'A apărut o eroare la înregistrare.';
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { data?: string } }).response;
+      if (response?.data) {
+        errorMessage = response.data;
+      }
+    }
+    alert(`Eroare: ${errorMessage}`);
+  }
+};
 </script>
 
 <style scoped lang="scss">
@@ -143,14 +150,16 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #f4f4f4;
+  padding: 1rem 0;
 }
 .auth-form {
   background: white;
   padding: 2rem;
   border-radius: 10px;
-  width: 320px;
+  width: 100%;
+  max-width: 400px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 </style>

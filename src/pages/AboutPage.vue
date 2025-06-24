@@ -66,36 +66,6 @@
           </ul>
         </q-card-section>
       </q-card>
-
-      <q-card bordered class="q-pa-md">
-        <q-card-section>
-          <div class="text-h6">Structura Echipei</div>
-          <p>
-            Platforma a fost realizată în mod individual, în cadrul proiectului de licență. Toate
-            etapele de analiză, proiectare, implementare și testare au fost realizate de către un
-            singur dezvoltator, asumând următoarele roluri:
-          </p>
-          <ul>
-            <li><b>Analist funcțional:</b> definirea cerințelor și a structurii aplicației</li>
-            <li>
-              <b>Dezvoltator full-stack:</b> implementarea completă a interfeței frontend și a
-              logicii backend
-            </li>
-            <li>
-              <b>Administrator de bază de date:</b> proiectarea și gestionarea structurii
-              relaționale (MySQL/PostgreSQL)
-            </li>
-            <li>
-              <b>Responsabil testare:</b> validarea funcționalității și optimizarea performanței
-              aplicației
-            </li>
-            <li>
-              <b>Autor documentație:</b> redactarea și structurarea conținutului lucrării de licență
-            </li>
-          </ul>
-        </q-card-section>
-      </q-card>
-
       <q-card bordered class="q-pa-md">
         <q-card-section>
           <div class="text-h6">Etapele de Dezvoltare</div>
@@ -114,6 +84,4 @@
   </q-page>
 </template>
 
-<script lang="ts">
-// Nu este necesar cod JS pentru această pagină statică
-</script>
+<script lang="ts"></script>
