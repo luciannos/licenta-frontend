@@ -10,6 +10,7 @@ export interface Produs {
   imagine: string;
   stoc: number;
   cantitate?: number;
+  numarVanzari?: number;
 }
 
 export const useProductStore = defineStore('product', {

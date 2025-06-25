@@ -46,16 +46,27 @@
 
       <q-separator class="q-my-md" />
 
+      <div class="q-mb-md">
+        <q-input
+          v-model="adresaLivrare"
+          label="Adresa de livrare"
+          outlined
+          :loading="loadingAdresa"
+          :disable="loadingAdresa"
+          placeholder="Introduceți adresa de livrare"
+        />
+      </div>
+
       <div class="row justify-between items-center">
         <div class="text-h6">Total: {{ total }} RON</div>
-        <q-btn label="Finalizează comanda" color="primary" @click="trimiteComanda" :loading="loading" />
+        <q-btn label="Finalizează comanda" color="primary" @click="trimiteComanda" :loading="loading" :disable="!adresaLivrare" />
       </div>
     </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useProductStore } from 'src/stores/useProductStore';
 import type { Produs } from 'src/stores/useProductStore';
 import { api } from 'boot/axios';
@@ -68,6 +79,24 @@ const router = useRouter();
 
 const cos = computed(() => store.cos);
 const loading = ref(false);
+const adresaLivrare = ref('');
+const loadingAdresa = ref(true);
+
+onMounted(async () => {
+  if (authStore.isLoggedIn) {
+    loadingAdresa.value = true;
+    try {
+      const response = await api.get('/api/user/me');
+      adresaLivrare.value = response.data.adresa || '';
+    } catch (error) {
+      console.error("Nu s-a putut prelua adresa:", error);
+    } finally {
+      loadingAdresa.value = false;
+    }
+  } else {
+    loadingAdresa.value = false;
+  }
+});
 
 const total = computed(() =>
   store.cos.reduce((suma, produs) => suma + produs.pret * (produs.cantitate || 1), 0),
@@ -103,7 +132,10 @@ async function trimiteComanda() {
   }));
 
   try {
-    await api.post('/api/comenzi', detaliiComanda);
+    await api.post('/api/comenzi', {
+      detaliiComanda,
+      adresaLivrare: adresaLivrare.value
+    });
     alert('Comanda a fost înregistrată! Mulțumim pentru achiziție.');
     store.golesteCos();
   } catch (error: unknown) {

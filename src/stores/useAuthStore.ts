@@ -63,7 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
     } catch (error) {
       console.error('Login failed:', error);
-      removeToken(); // Clear token on failed login
+      removeToken();
       throw error;
     }
   }
@@ -71,7 +71,11 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout() {
     try {
       if (token.value) {
-        await api.post('/api/auth/logout');
+        await api.post('/api/auth/logout', null, {
+          headers: {
+            Authorization: `Bearer ${token.value}`,
+          },
+        });
       }
     } catch (error) {
       console.error('Logout failed:', error);
@@ -108,4 +112,4 @@ export const useAuthStore = defineStore('auth', () => {
     register,
     logout,
   };
-}); 
+});

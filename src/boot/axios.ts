@@ -26,7 +26,13 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (
+      token &&
+      config.url &&
+      !config.url.startsWith('/api/produse/recomandate') &&
+      !config.url.startsWith('/api/produse') &&
+      !config.url.startsWith('/api/auth')
+    ) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -45,6 +51,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 403) {
       localStorage.removeItem('token');
+      window.location.href = '/login';
     }
     if (error instanceof Error) {
       return Promise.reject(error);

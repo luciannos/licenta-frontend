@@ -18,6 +18,7 @@
 
         <q-btn v-if="authStore.isLoggedIn" flat dense label="Logout" icon="logout" @click="handleLogout" />
         <q-btn v-else flat dense label="Login" icon="login" to="/login" />
+        <q-btn v-if="authStore.isLoggedIn" flat dense label="Contul meu" icon="account_circle" to="/account" />
       </q-toolbar>
     </q-header>
 

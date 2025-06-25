@@ -9,17 +9,18 @@
         <q-expansion-item
           v-for="comanda in comenzi"
           :key="comanda.id"
-          :label="`Comanda #${comanda.id} - ${comanda.userEmail}`"
-          :caption="`Total: ${comanda.total} RON - Data: ${new Date(comanda.dataComanda).toLocaleString()}`"
+          :label="`Comanda #${comanda.id} - ${comanda.userName}`"
+          :caption="`Total: ${comanda.total} RON - Data: ${comanda.dataComanda ? new Date(comanda.dataComanda).toLocaleString() : ''}`"
           group="comenzi"
         >
           <q-card>
             <q-card-section>
               <div class="text-subtitle1">Detalii Comandă:</div>
+              <div class="q-mb-sm"><b>Data comenzii:</b> {{ comanda.dataComanda ? new Date(comanda.dataComanda).toLocaleString() : '' }}</div>
               <q-list dense separator>
                 <q-item v-for="detaliu in comanda.detaliiComanda" :key="detaliu.produsId">
                   <q-item-section>
-                    <q-item-label>Produs ID: {{ detaliu.produsId }}</q-item-label>
+                    <q-item-label><b>{{ detaliu.denumireProdus }}</b></q-item-label>
                     <q-item-label caption>Cantitate: {{ detaliu.cantitate }}</q-item-label>
                   </q-item-section>
                   <q-item-section side>
