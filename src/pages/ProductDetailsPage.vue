@@ -8,7 +8,9 @@
 
         <div class="col-12 col-md-8">
           <div class="text-h5">{{ produs.denumire }}</div>
-          <div class="text-subtitle1 text-grey q-mt-sm" style="white-space: pre-wrap;">{{ produs.descriere }}</div>
+          <div class="text-subtitle1 text-black q-mt-sm" style="white-space: pre-wrap">
+            {{ produs.descriere }}
+          </div>
           <div class="text-h6 q-mt-md">Preț: {{ produs.pret }} RON</div>
           <div class="text-subtitle2 q-mt-sm">În stoc: {{ produs.stoc }} buc.</div>
 

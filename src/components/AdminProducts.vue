@@ -50,7 +50,7 @@ const loading = ref<Record<number, boolean>>({});
 onMounted(async () => {
   await productStore.incarcareProduse();
   produse.value = productStore.produse;
-  produse.value.forEach(p => {
+  produse.value.forEach((p) => {
     stocuri.value[p.id] = p.stoc;
   });
 });
@@ -66,9 +66,8 @@ const updateStock = async (produs: Produs) => {
   try {
     const updatedProdus = { ...produs, stoc: newStock };
     await api.put(`/api/admin/produse/${produs.id}`, updatedProdus);
-    
-    // Update the product in the local state
-    const pToUpdate = produse.value.find(p => p.id === produs.id);
+
+    const pToUpdate = produse.value.find((p) => p.id === produs.id);
     if (pToUpdate) {
       pToUpdate.stoc = newStock;
     }
@@ -80,4 +79,4 @@ const updateStock = async (produs: Produs) => {
     loading.value[produs.id] = false;
   }
 };
-</script> 
+</script>

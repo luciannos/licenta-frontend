@@ -41,23 +41,11 @@
 
       <q-card bordered class="q-pa-md">
         <q-card-section>
-          <div class="text-h6">Validarea Partenerilor</div>
-          <p>
-            Comercianții care doresc să vândă prin platformă sunt supuși unui proces de validare ce
-            include verificarea identității, a codului fiscal și a documentelor legale. Numai
-            firmele care îndeplinesc criteriile de conformitate pot accesa funcționalitățile de
-            administrare a produselor și comenzilor.
-          </p>
-        </q-card-section>
-      </q-card>
-
-      <q-card bordered class="q-pa-md">
-        <q-card-section>
           <div class="text-h6">Factori Diferențiatori</div>
           <ul>
             <li>
-              Algoritm inteligent de recomandare a produselor în funcție de comportamentul
-              utilizatorului
+              Algoritm inteligent de recomandare a produselor în funcție de achizițiile
+              utilizatorilor
             </li>
             <li>Motor de căutare optimizat cu filtre avansate și sugestii personalizate</li>
             <li>Dashboard administrativ pentru comercianți cu raportare în timp real</li>
